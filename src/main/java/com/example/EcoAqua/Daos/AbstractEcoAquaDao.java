@@ -12,7 +12,12 @@ public abstract class AbstractEcoAquaDao {
     protected MongoClient client;
     protected MongoDatabase db;
 
+    protected String user;
+    protected String password;
+
     protected AbstractEcoAquaDao(String user,String password){
+        this.user = user;
+        this.password = password;
         this.client = MongoClients.create(new ConnectionString("mongodb+srv://" +user+":"+password+clusterAddress));
         this.db = this.client.getDatabase("EcoAqua");
     }

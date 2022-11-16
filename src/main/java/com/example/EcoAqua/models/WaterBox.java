@@ -3,6 +3,7 @@ package com.example.EcoAqua.models;
 import org.bson.BsonDateTime;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -10,7 +11,7 @@ public class WaterBox {
     private ObjectId id;
     private String nome;
     private byte status;
-    private HashMap<BsonDateTime,Measurement> measurements;
+    private ArrayList<Measurement> measurements;
 
     public WaterBox(){
 
@@ -35,7 +36,7 @@ public class WaterBox {
         this.status = status;
     }
 
-    public HashMap<BsonDateTime, Measurement> getMeasurements() {
+    public ArrayList<Measurement> getMeasurements() {
         return measurements;
     }
     public void open(){
