@@ -11,7 +11,6 @@ public abstract class AbstractEcoAquaDao {
     protected String clusterAddress = "@ecoaqua.pa1g3ed.mongodb.net/?retryWrites=true&w=majority";
     protected MongoClient client;
     protected MongoDatabase db;
-
     protected String user;
     protected String password;
 

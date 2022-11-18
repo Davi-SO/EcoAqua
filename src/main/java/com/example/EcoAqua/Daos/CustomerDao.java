@@ -14,6 +14,8 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class CustomerDao extends AbstractEcoAquaDao{
     private MongoCollection<Document> customers;
 
@@ -28,7 +30,7 @@ public class CustomerDao extends AbstractEcoAquaDao{
         if(!validateCustomerId(id)) return null;
 
         List<Bson> pipeline = new ArrayList<>();
-        Bson match = Aggregates.match(Filters.eq("_id", id));
+        Bson match = Aggregates.match(eq("_id", id));
         pipeline.add(match);
         Document customer = this.customers.aggregate(pipeline).first();
 
@@ -45,6 +47,11 @@ public class CustomerDao extends AbstractEcoAquaDao{
                         "registeredDevices."+customer.get("registeredDevices", ArrayList.class).size(),
                         waterBoxDao.insertWaterBox(waterBox)));
         this.customers.updateOne(new Document("_id",customer.getObjectId("_id")),updates,new UpdateOptions().upsert(true));
+    }
+    public String getLastWaterBox(String email){
+        ArrayList<String> waterBoxes = this.customers.find(eq("email",email)).first().get("registeredDevices",ArrayList.class);
+        System.out.println(waterBoxes.get(waterBoxes.size()-1));
+        return waterBoxes.get(waterBoxes.size()-1);
     }
 
 }
