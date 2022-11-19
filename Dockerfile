@@ -1,4 +1,4 @@
 FROM eclipse-temurin
-WORKDIR /EcoAqua
-COPY ./target/classes/ /EcoAqua
-ENTRYPOINT ["java", "com.example.EcoAqua.Mongodb.HelloMongoDB"]
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java", "-jar","/app.jar"]
