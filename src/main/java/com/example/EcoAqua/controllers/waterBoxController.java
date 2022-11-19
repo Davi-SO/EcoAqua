@@ -26,6 +26,11 @@ public class waterBoxController {
         return waterBoxDao.validateWaterBoxId(new ObjectId(id));}
         catch (Exception e) {return false;}
     }
+    @GetMapping(value = "{id}/status")
+    public String getStatus(@PathVariable("id") String id){
+        WaterBoxDao waterBoxDao = new WaterBoxDao("davi-so","qwerty12345");
+        return String.valueOf(waterBoxDao.getStatus(id));
+    }
     @PostMapping(value = "/{id}/measurements")
     public String updateMeasurements(@PathVariable("id")String id,@RequestBody String  payload){
         WaterBoxDao waterBoxDao = new WaterBoxDao("davi-so","qwerty12345");

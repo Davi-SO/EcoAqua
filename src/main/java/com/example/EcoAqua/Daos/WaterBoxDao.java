@@ -65,5 +65,8 @@ public class WaterBoxDao extends AbstractEcoAquaDao{
         return document.toJson();
     }
 
+    public int getStatus(String id){
+        return this.waterBoxes.find(new Document("_id",new ObjectId(id))).first().getInteger("status");
+    }
 
 }
