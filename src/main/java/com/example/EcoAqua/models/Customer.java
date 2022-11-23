@@ -12,8 +12,11 @@ public class Customer {
     private String password;
     private HashMap<String,WaterBox> registeredDevices;
 
-    public Customer(){
-
+    public Customer(ObjectId id,String email,String password,HashMap<String,WaterBox> registeredDevices){
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.registeredDevices = new HashMap<>(registeredDevices);
     }
     public ObjectId getId() {
         return id;

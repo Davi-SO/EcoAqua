@@ -16,12 +16,11 @@ import static com.mongodb.client.model.Aggregates.set;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.push;
 
-public class WaterBoxDao extends AbstractEcoAquaDao{
+public class WaterBoxDao{
 
     private final MongoCollection<Document> waterBoxes;
-    public WaterBoxDao(String user, String password) {
-        super(user, password);
-        this.waterBoxes = this.db.getCollection("waterboxes");
+    public WaterBoxDao() {
+        this.waterBoxes = EcoAquaDao.db.getCollection("waterboxes");
     }
     public boolean validateWaterBoxId(ObjectId id){
         return this.waterBoxes.find(eq("_id", id)).first() != null;
@@ -66,7 +65,9 @@ public class WaterBoxDao extends AbstractEcoAquaDao{
     }
 
     public int getStatus(String id){
-        return this.waterBoxes.find(new Document("_id",new ObjectId(id))).first().getInteger("status");
+        try{
+        return this.waterBoxes.find(new Document("_id",new ObjectId(id))).first().getInteger("status");}
+        catch (Exception e) {return 0;}
     }
 
 }
