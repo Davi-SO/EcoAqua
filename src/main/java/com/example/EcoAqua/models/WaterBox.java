@@ -32,7 +32,7 @@ public class WaterBox {
         this.name = name;
         this.batch = batch;
         this.status = status;
-        this.measurements = measurements;
+        this.measurements = measurements==null?(new ArrayList<>()):measurements;
     }
 
 
@@ -69,5 +69,7 @@ public class WaterBox {
     public void connect(String customerId){
 
     }
+
+
 }
 

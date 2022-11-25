@@ -8,8 +8,10 @@ import java.util.ArrayList;
 public class WaterBoxMapper {
     public static Document waterBoxToDocument(WaterBox waterBox){
         ArrayList<Document> measurements = new ArrayList<>();
-        for(Measurement m:waterBox.getMeasurements()){
-            measurements.add(MeasurementMapper.measurementToDocument(m));
+        if (waterBox.getMeasurements()!=null) {
+            for (Measurement m : waterBox.getMeasurements()) {
+                measurements.add(MeasurementMapper.measurementToDocument(m));
+            }
         }
         return new Document(
                 "_id", waterBox.getId()).append(
@@ -21,12 +23,14 @@ public class WaterBoxMapper {
     }
     public static WaterBox documentToWaterBox(Document document){
         ArrayList<Measurement> measurements = new ArrayList<>();
+        if (document.get("measurements",ArrayList.class)!=null){
         for(Object d:document.get("measurements",ArrayList.class)){
             try{
             measurements.add(MeasurementMapper.documentToMeasurement((Document)d));
             }catch (Exception e){
                 System.err.println(e.getMessage());
             }
+        }
         }
         return new WaterBox(
                 document.getObjectId("_id"),

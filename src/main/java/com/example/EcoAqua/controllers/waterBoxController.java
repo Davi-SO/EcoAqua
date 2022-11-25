@@ -2,8 +2,10 @@ package com.example.EcoAqua.controllers;
 
 import com.example.EcoAqua.Daos.CustomerDao;
 import com.example.EcoAqua.Daos.WaterBoxDao;
+import com.example.EcoAqua.documentMappers.WaterBoxMapper;
+import com.example.EcoAqua.services.CustomerService;
+import com.example.EcoAqua.services.WaterBoxService;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -14,70 +16,82 @@ import java.util.Map;
 @RequestMapping("/influxIOT/waterbox")
 public class WaterBoxController {
 
-
     @PostMapping(value="/checkInfo")
-    public boolean checkInfo(@RequestBody String id){
-        WaterBoxDao waterBoxDao = new WaterBoxDao();
-        try{
-        return waterBoxDao.validateWaterBoxId(new ObjectId(id));}
-        catch (Exception e) {return false;}
+    public boolean checkInfo(@RequestBody String payload){
+        Map<String, Object> data = null;
+        try
+        {
+            data = new ObjectMapper().readValue(payload, Map.class);
+            return WaterBoxService.checkInfo(data.get("id").toString());
+        }
+        catch (Exception e)
+        {
+            System.err.println(e.getMessage());
+            return false;
+        }
     }
     @PostMapping(value = "/status")
-    public String getStatus(@RequestBody String id){
-        WaterBoxDao waterBoxDao = new WaterBoxDao();
-        System.out.println("Function getStatus() called");
-        return String.valueOf(waterBoxDao.getStatus(id));
+    public String getStatus(@RequestBody String payload){
+        Map<String, Object> data = null;
+        try
+        {
+        data = new ObjectMapper().readValue(payload, Map.class);
+        }
+        catch (Exception e)
+        {
+        System.err.println(e.getMessage());
+        return String.valueOf(1);
+        }
+        System.out.println(WaterBoxService.getStatus(data.get("id").toString()));
+        return WaterBoxService.getStatus(data.get("id").toString());
     }
     @PostMapping(value = "/measurements")
-    public String updateMeasurements(@RequestBody String  payload){
-        WaterBoxDao waterBoxDao = new WaterBoxDao();
+    public void updateMeasurements(@RequestBody String  payload){
         Map<String, Object> data = null;
-        try{
-        data = new ObjectMapper().readValue(payload, HashMap.class);}
-        catch (Exception e ){
-            System.err.println(e.getMessage());
-            return e.getMessage();
+        try
+        {
+        data = new ObjectMapper().readValue(payload, Map.class);
         }
-        try{
-        return waterBoxDao.insertMeasurement((double)data.get("flow"),(double)data.get("volume"),data.get("id").toString());}
-        catch (Exception e){
-            System.err.println(e.getMessage());
-            return e.getMessage();
+        catch (Exception e )
+        {
+        System.err.println("The WaterBox device sent a problematic request - updateMeasurements()");
+        System.err.println(e.getMessage());
+        }
+        try
+        {
+        WaterBoxDao.insertMeasurement((double)data.get("flow"),(double)data.get("volume"),data.get("id").toString());
+        }
+        catch (Exception e)
+        {
+        System.err.println("bad function call - updateMeasurements()");
+        System.err.println(e.getMessage());
         }
     }
     @PostMapping(value="/insertWaterBox")
-    public String insertWaterBox(@RequestBody String payload) throws Exception{
-        //Payload:
-        //{email:String
-        // name: String,
-        //batch: int}
+    public String insertWaterBox(@RequestBody String payload) {
         Map<String, Object> data = null;
-        try{
-            data = new ObjectMapper().readValue(payload, HashMap.class);}
-        catch (Exception e ){
-            System.err.println(e.getMessage());
-            System.err.println("failed!");
-            //throw new Exception("failed WaterBoxController.insertWaterBox! #0");
-
+        System.out.println(payload);
+        try
+        {
+        data = new ObjectMapper().readValue(payload, HashMap.class);
+        }
+        catch (Exception e )
+        {
+        System.err.println(e.getMessage());
+        System.err.println("The WaterBox device sent a problematic request - insertWaterBox()");
         }
 //        try{
-        WaterBoxDao waterBoxDao = new WaterBoxDao();
-        CustomerDao customerDao = new CustomerDao();
-        customerDao.attachWaterBox(
+        CustomerService.attachWaterBox(
                 //customer id
-                customerDao.getCustomer(data.get("email").toString()).getObjectId("_id"),
+                String.valueOf(CustomerDao.getCustomer(data.get("email").toString()).getObjectId("_id")),
                 //box id
-                new ObjectId(waterBoxDao.insertWaterBox(new Document(
-                "name",data.get("name")).append(
-                "batch",(int)data.get("batch")).append(
-                "status",0)
+                String.valueOf(WaterBoxDao.insertWaterBox(
+                    new Document(
+                    "name",data.get("name")).append(
+                    "batch",(int)data.get("batch")).append(
+                    "status",0)
                 ))
         );
-        return customerDao.getLastWaterBox(data.get("email").toString());
-//        catch (Exception e){
-//            System.err.println(e.getMessage());
-//            return "failed!";
-            //throw new Exception("failed WaterBoxController.insertWaterBox! #1");
-//        }
+        return CustomerService.getLastWaterBox(data.get("email").toString()).getId().toHexString();
     }
 }
