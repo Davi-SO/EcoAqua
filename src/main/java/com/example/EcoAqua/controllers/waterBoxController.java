@@ -25,6 +25,7 @@ public class WaterBoxController {
     @PostMapping(value = "/status")
     public String getStatus(@RequestBody String id){
         WaterBoxDao waterBoxDao = new WaterBoxDao();
+        System.out.println("Function getStatus() called");
         return String.valueOf(waterBoxDao.getStatus(id));
     }
     @PostMapping(value = "/measurements")

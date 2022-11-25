@@ -1,5 +1,6 @@
 package com.example.EcoAqua.Daos;
 
+import com.example.EcoAqua.documentMappers.CustomerMapper;
 import com.example.EcoAqua.models.Customer;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
@@ -35,7 +36,6 @@ public class CustomerDao {
         Bson match = Aggregates.match(eq("_id", id));
         pipeline.add(match);
         Document customer = this.customers.aggregate(pipeline).first();
-
         return customer;
     }
     public Document getCustomer(String email){
@@ -44,22 +44,31 @@ public class CustomerDao {
         Bson match = Aggregates.match(eq("email", email));
         pipeline.add(match);
         Document customer = this.customers.aggregate(pipeline).first();
-
         return customer;
     }
 
-    public void signUp(String email,String password,String name) throws Exception{
-        if (this.getCustomer(email)!=null)
+    public void signUp(String name,String email,String password) throws Exception{
+        if (this.getCustomer(email)==null){
         this.customers.insertOne(new Document(
                 "email",email).append(
                 "password",password).append(
                 "name",name)
-        );
-        else throw new Exception("Conta com email ja cadastrado");
+        );}
+        else {throw new Exception("Conta com email ja cadastrado");}
     }
 
+    public ObjectId signIn(String email,String password) throws Exception{
+        try{
+            return this.customers.find(new Document(
+                    "email",email).append(
+                    "password",password)
+            ).first().getObjectId("_id");}
+        catch (Exception e){
+            throw new Exception("Informações erradas!");
+        }
+    }
     public void attachWaterBox(ObjectId customerId, ObjectId waterBoxId){
-        Document customer = this.getCustomer(customerId);
+        Document customer =this.getCustomer(customerId);
         Bson updates = Updates.combine(
                 Updates.set(
                         "registeredDevices."+customer.get("registeredDevices", ArrayList.class).size(),
@@ -91,16 +100,7 @@ public class CustomerDao {
         this.db.runCommand(createUserCommand);
     } */
 
-    public ObjectId signIn(String email,String password) throws Exception{
-        try{
-        return this.customers.find(new Document(
-                "email",email).append(
-                "password",password)
-        ).first().getObjectId("_id");}
-        catch (Exception e){
-            throw new Exception("Informações erradas!");
-        }
-    }
+
 
 
 }

@@ -1,5 +1,7 @@
 package com.example.EcoAqua.Daos;
 
+import com.example.EcoAqua.documentMappers.CustomerMapper;
+import com.example.EcoAqua.documentMappers.WaterBoxMapper;
 import com.example.EcoAqua.models.WaterBox;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
@@ -35,7 +37,6 @@ public class WaterBoxDao{
         Bson match = Aggregates.match(eq("_id", id));
         pipeline.add(match);
         Document waterBox = this.waterBoxes.aggregate(pipeline).first();
-
         return waterBox;
     }
 

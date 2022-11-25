@@ -8,24 +8,46 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class WaterBox {
-    private ObjectId id;
-    private String nome;
+    private final ObjectId id;
+    private String name;
+
+    private final int batch;
     private byte status;
+
+    @Override
+    public String toString() {
+        return "WaterBox{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", batch=" + batch +
+                ", status=" + status +
+                ", measurements=" + measurements +
+                '}';
+    }
+
     private ArrayList<Measurement> measurements;
 
-    public WaterBox(){
-
+    public WaterBox(ObjectId id, String name, int batch, byte status, ArrayList<Measurement> measurements) {
+        this.id = id;
+        this.name = name;
+        this.batch = batch;
+        this.status = status;
+        this.measurements = measurements;
     }
+
 
     public ObjectId getId() {
         return id;
     }
-    public String getNome() {
-        return nome;
+    public int getBatch() {
+        return batch;
+    }
+    public String getName() {
+        return this.name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String name) {
+        this.name = name;
     }
 
     public byte getStatus() {

@@ -12,7 +12,17 @@ public class Customer {
     private String password;
     private HashMap<String,WaterBox> registeredDevices;
 
-    public Customer(ObjectId id,String email,String password,HashMap<String,WaterBox> registeredDevices){
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", registeredDevices=" + registeredDevices +
+                '}';
+    }
+
+    public Customer(ObjectId id, String email, String password, HashMap<String,WaterBox> registeredDevices){
         this.id = id;
         this.email = email;
         this.password = password;
