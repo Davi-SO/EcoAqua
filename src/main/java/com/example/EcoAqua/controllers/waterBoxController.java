@@ -3,6 +3,7 @@ package com.example.EcoAqua.controllers;
 import com.example.EcoAqua.Daos.CustomerDao;
 import com.example.EcoAqua.Daos.WaterBoxDao;
 import com.example.EcoAqua.documentMappers.WaterBoxMapper;
+import com.example.EcoAqua.models.Measurement;
 import com.example.EcoAqua.services.CustomerService;
 import com.example.EcoAqua.services.WaterBoxService;
 import org.bson.Document;
@@ -47,22 +48,33 @@ public class WaterBoxController {
     }
     @PostMapping(value = "/measurements")
     public void updateMeasurements(@RequestBody String  payload){
-        Map<String, Object> data = null;
+        HashMap<String, Object> data = null;
+        Measurement m = null;
         try
         {
-        data = new ObjectMapper().readValue(payload, Map.class);
+        data = new ObjectMapper().readValue(payload, HashMap.class);
         }
         catch (Exception e )
         {
         System.err.println("The WaterBox device sent a problematic request - updateMeasurements()");
         System.err.println(e.getMessage());
+        return;
         }
         try
         {
-        WaterBoxDao.insertMeasurement((double)data.get("flow"),(double)data.get("volume"),data.get("id").toString());
+        m = new Measurement((long)data.get("timestamp"),(double)data.get("flow"),(double)data.get("volume"));
         }
         catch (Exception e)
         {
+        System.err.println("bad function call - updateMeasurements()");
+        System.err.println(e.getMessage());
+        return;
+        }
+        try
+        {
+            WaterBoxService.insertMeasurement(m,data.get("id").toString());
+        }
+        catch (Exception e){
         System.err.println("bad function call - updateMeasurements()");
         System.err.println(e.getMessage());
         }
@@ -79,11 +91,12 @@ public class WaterBoxController {
         {
         System.err.println(e.getMessage());
         System.err.println("The WaterBox device sent a problematic request - insertWaterBox()");
+        return "fail!";
         }
-//        try{
+
         CustomerService.attachWaterBox(
                 //customer id
-                String.valueOf(CustomerDao.getCustomer(data.get("email").toString()).getObjectId("_id")),
+                String.valueOf(CustomerService.getCustomerByEmail(data.get("email").toString())),
                 //box id
                 String.valueOf(WaterBoxDao.insertWaterBox(
                     new Document(

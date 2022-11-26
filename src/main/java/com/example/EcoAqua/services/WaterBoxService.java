@@ -1,9 +1,12 @@
 package com.example.EcoAqua.services;
 
 import com.example.EcoAqua.Daos.WaterBoxDao;
+import com.example.EcoAqua.documentMappers.MeasurementMapper;
 import com.example.EcoAqua.documentMappers.WaterBoxMapper;
+import com.example.EcoAqua.models.Measurement;
 import com.example.EcoAqua.models.WaterBox;
 import org.bson.types.ObjectId;
+import org.bson.Document;
 
 public class WaterBoxService {
     public static boolean checkInfo(String id){
@@ -46,6 +49,31 @@ public class WaterBoxService {
         System.err.println("No waterBoxes found with the id passed - getWaterBox()");
         return null;
         }
+    }
+    public static void insertMeasurement(Measurement m,String id){
+        ObjectId oid = null;
+        try
+        {
+            oid = new ObjectId(id);
+        }
+        catch (IllegalArgumentException e)
+        {
+            System.err.println("The WaterBox device sent a problematic request - insertMeasurement()");
+            System.err.println(e.getMessage());
+            return;
+        }
+        try
+        {
+        WaterBoxDao.insertMeasurement(MeasurementMapper.measurementToDocument(m),oid);
+        }
+        catch (Exception e){
+            System.err.println("The id provided found no devices");
+            System.err.println(e.getMessage());
+            return;
+        }
+    }
+    public static void insertWaterBox(WaterBox waterBox){
+
     }
 
 

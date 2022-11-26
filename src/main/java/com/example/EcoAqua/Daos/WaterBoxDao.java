@@ -38,7 +38,7 @@ public class WaterBoxDao{
         return waterBoxes.aggregate(pipeline).first();
     }
 
-    public static ObjectId insertWaterBox(Document waterBox){
+    public static ObjectId insertWaterBox(Document waterBox) {
         try
         {
         return waterBoxes.insertOne(waterBox).getInsertedId().asObjectId().getValue();
@@ -50,40 +50,42 @@ public class WaterBoxDao{
         return null;
         }
     }
-    public static void insertMeasurement(double flow, double volume, String id){
+    public static void insertMeasurement(Document measurement,ObjectId waterBoxId)throws Exception{
+        Document x = null;
         try
         {
-        waterBoxes.findOneAndUpdate(
-                //filter
-                new Document("_id", new ObjectId(id)),
-                //update
-                push("measurements",
-                new Document(
-                "timestamp", System.currentTimeMillis()).append(
-                "flow", flow).append(
-                "volume", volume))
-                );
+        x = waterBoxes.findOneAndUpdate(
+                new Document("_id", waterBoxId),//filter
+                push("measurements", measurement).toBsonDocument());//update
+
+        System.out.println(x);
         }
-        catch(MongoException ex){
-            System.err.println("Error code: "+ex.getCode());
-            System.err.println("Error message: "+ex.getMessage());
-            System.err.println("Measurement insertion failed! - insertMeasurement()");}
-        catch (Exception e){
-            System.err.println("Error message: "+ e.getMessage());
+        catch(MongoException ex)
+        {
+        System.err.println("Error code: "+ex.getCode());
+        System.err.println("Error message: "+ex.getMessage());
+        System.err.println("Measurement insertion failed! - insertMeasurement()");}
+        catch (Exception e)
+        {
+        System.err.println("Error message: "+ e.getMessage());
         }
+        if (x==null) throw new Exception("find failed!");
     }
 
     public static int getStatus(ObjectId id){
         try{
-        return waterBoxes.find(new Document("_id",id)).first().getInteger("status");}
-        catch (NullPointerException nullPointerException){
-            System.err.println("Id incorreto resgistrado no dispositivo - getStatus()");
-            return 1;
+        return waterBoxes.find(new Document("_id",id)).first().getInteger("status");
         }
-        catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.getCause().toString());
-            return 1;
+        catch (NullPointerException nullPointerException)
+        {
+        System.err.println("Id incorreto resgistrado no dispositivo - getStatus()");
+        return 1;
+        }
+        catch (Exception e)
+        {
+        System.err.println(e.getMessage());
+        System.err.println(e.getCause().toString());
+        return 1;
         }
     }
 

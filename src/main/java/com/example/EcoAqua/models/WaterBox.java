@@ -66,9 +66,19 @@ public class WaterBox {
     }
     public void close(){
     }
-    public void connect(String customerId){
-
+    public double getVolume(){
+        double v = 0;
+        for (Measurement m:this.getMeasurements())
+            v += m.getVolume();
+        return v;
     }
+    public double getFlow(){
+        double f = 0;
+        for (Measurement m:this.getMeasurements())
+            f += m.getFlow();
+        return f;
+    }
+
 
 
 }

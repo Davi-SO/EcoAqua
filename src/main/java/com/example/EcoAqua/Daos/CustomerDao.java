@@ -51,7 +51,7 @@ public class CustomerDao {
         else {throw new Exception("Conta com email ja cadastrado");}
     }
 
-    public ObjectId getsignIn(String email,String password) throws Exception{
+    public ObjectId signIn(String email,String password) throws Exception{
         try{
             return customers.find(new Document(
                     "email",email).append(
@@ -83,7 +83,7 @@ public class CustomerDao {
         catch (Exception e){
             System.err.println(e.getMessage());
         }
-        return "nope";
+        return "fail!";
     }
     /*
     //A função a baixo não funciona em clusters M0 :(
