@@ -33,6 +33,25 @@ public class WaterBoxService {
         return String.valueOf(1);
         }
     }
+    public static boolean setStatusClosed(String id){
+        ObjectId oid = null;
+        try
+        {
+        oid = new ObjectId(id);
+        }
+        catch (Exception e){
+            System.err.println("Bad request - setStatusClosed()");
+            System.err.println(e.getMessage());
+        }
+        try
+        {
+        WaterBoxDao.setStatusClosed(oid);
+        }
+        catch (Exception e){
+            return false;
+        }
+        return true;
+    }
     public WaterBox getWaterBox(String id){
         try
         {
