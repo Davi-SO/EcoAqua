@@ -3,6 +3,7 @@ package com.example.EcoAqua.Daos;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Updates;
 import org.bson.*;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -86,6 +87,17 @@ public class WaterBoxDao{
             System.err.println(e.getMessage());
             System.err.println(e.getCause().toString());
             return 1;
+        }
+    }
+    public static void setStatusClosed(ObjectId id) throws Exception{
+        if(!validateWaterBoxId(id)) throw new Exception("id not found!");
+        try
+        {
+            waterBoxes.findOneAndUpdate(new Document("_id", id), Updates.set("status",1).toBsonDocument());
+        }
+        catch (Exception e){
+            System.err.println("Status couldnt be changed - setStatusClosed");
+            System.err.println(e.getMessage());
         }
     }
 

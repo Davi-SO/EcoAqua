@@ -47,6 +47,25 @@ public class WaterBoxController {
         System.out.println(WaterBoxService.getStatus(data.get("id").toString()));
         return WaterBoxService.getStatus(data.get("id").toString());
     }
+    @PostMapping(value = "/close")
+    public boolean close(@RequestBody String payload){
+        /*payload
+        {"id": String}
+         */
+        Map<String, Object> data = null;
+        System.out.println(payload);
+        try
+        {
+            data = new ObjectMapper().readValue(payload, Map.class);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Bad request - close()");
+            System.err.println(e.getMessage());
+            return false;
+        }
+        return WaterBoxService.setStatusClosed(data.get("id").toString());
+    }
     @PostMapping(value = "/measurements")
     public void updateMeasurements(@RequestBody String  payload){
         HashMap<String, Object> data = null;
