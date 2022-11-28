@@ -16,7 +16,7 @@ public class WaterBoxService {
         }
         catch (Exception e){
             if (e.getClass()==IllegalArgumentException.class){
-                System.err.println("The WaterBox device sent a problematic request - Check the ID given");
+                System.err.println("The WaterBox device sent a problematic request - Check the given ID");
             }
             return false;
         }
@@ -29,7 +29,7 @@ public class WaterBoxService {
         catch (Exception e)
         {
             System.err.println(e.getMessage());
-            System.err.println("Bad Request - Not able to get status of water box, check ID given");
+            System.err.println("Bad Request - Not able to get status of water box, check given ID");
             return String.valueOf(1);
         }
     }
@@ -52,7 +52,11 @@ public class WaterBoxService {
         }
         return true;
     }
-    public WaterBox getWaterBox(String id){
+
+    //FIXME: Changed to Static method.
+    // - Does it changes anything?
+    // - How does it affect others parts of the code?
+    public static WaterBox getWaterBox(String id){
         try
         {
             return WaterBoxMapper.documentToWaterBox(WaterBoxDao.getWaterBox(new ObjectId(id)));
@@ -60,12 +64,12 @@ public class WaterBoxService {
 
         catch (IllegalArgumentException e1)
         {
-            System.err.println("The WaterBox device sent a problematic request - getWaterBox()");
+            System.err.println("Bad Request for getWaterBox");
             return null;
         }
         catch(Exception e2)
         {
-            System.err.println("No waterBoxes found with the id passed - getWaterBox()");
+            System.err.println("No WaterBoxes found with this ID");
             return null;
         }
     }
