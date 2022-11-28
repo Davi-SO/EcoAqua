@@ -1,9 +1,12 @@
 package com.example.EcoAqua.services;
 
+import com.example.EcoAqua.documentMappers.WaterBoxMapper;
 import com.example.EcoAqua.models.Measurement;
 import com.example.EcoAqua.models.WaterBox;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static com.example.EcoAqua.services.WaterBoxService.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,14 +57,26 @@ class WaterBoxServiceTest {
         System.out.println("Water Box Status: " + status);
     }
 
-    //TODO: Ver com o maligno pq está chamando do WaterBoxDao e não dos Services
     @Test
     void getWaterBoxFail() {
+        String idIncorrect1 = "";
+        String idIncorrect2 = "that's all folks";
+        String idIncorrect3 = "asdf5123afaserttryu54215";
+        String idIncorrect4 = "63741944cf5fa954d5264b4d";
+
+
+        assertNull(getWaterBox(idIncorrect1));
+        assertNull(getWaterBox(idIncorrect2));
+        assertNull(getWaterBox(idIncorrect3));
+        assertNull(getWaterBox(idIncorrect4));
+
     }
 
-    //TODO: Ver com o maligno pq está chamando do WaterBoxDao e não dos Services
     @Test
     void getWaterBoxSuccess() {
+        String idCorrect = "6381371888a2a3328083cc26";
+
+
     }
 
     //TODO: Como testar um método void
