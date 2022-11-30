@@ -69,6 +69,7 @@ public class WaterBoxController {
     public void updateMeasurements(@RequestBody String  payload){
         HashMap<String, Object> data = null;
         Measurement m = null;
+        System.out.println(payload);
         try
         {
         data = new ObjectMapper().readValue(payload, HashMap.class);
@@ -81,7 +82,7 @@ public class WaterBoxController {
         }
         try
         {
-        m = new Measurement((long)data.get("timestamp"),(double)data.get("flow"),(double)data.get("volume"));
+        m = new Measurement(System.currentTimeMillis(),(double)data.get("flow"),(double)data.get("volume"));
         }
         catch (Exception e)
         {

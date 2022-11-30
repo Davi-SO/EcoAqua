@@ -6,7 +6,10 @@ import com.example.EcoAqua.documentMappers.CustomerMapper;
 import com.example.EcoAqua.documentMappers.WaterBoxMapper;
 import com.example.EcoAqua.models.Customer;
 import com.example.EcoAqua.models.WaterBox;
+import org.bson.Document;
 import org.bson.types.ObjectId;
+
+import java.util.Objects;
 
 public class CustomerService {
     public static Customer getCustomerById(String id){
@@ -24,6 +27,17 @@ public class CustomerService {
         System.err.println("No customers found with the passed id - getCustomer()");
         return null;
         }
+    }
+    public static ObjectId signIn(String email,String password) throws Exception{
+        Customer c = null;
+        try{
+            c = CustomerMapper.documentToCustomer(CustomerDao.getCustomer(email));
+        }
+        catch (Exception e){
+            throw new Exception("Email Inválido");
+        }
+        if (Objects.equals(c.getPassword(), password)) return c.getId();
+        throw new Exception("Senha Inválida");
     }
     public static Customer getCustomerByEmail(String email){
         try
