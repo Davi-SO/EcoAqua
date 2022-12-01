@@ -6,9 +6,9 @@ import com.example.EcoAqua.documentMappers.CustomerMapper;
 import com.example.EcoAqua.documentMappers.WaterBoxMapper;
 import com.example.EcoAqua.models.Customer;
 import com.example.EcoAqua.models.WaterBox;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import org.bson.Document;
 import java.util.Objects;
 
 public class CustomerService {
@@ -71,6 +71,16 @@ public class CustomerService {
         System.err.println("No customers found with the passed email - getLastWaterBox()");
         return null;
         }
+    }
+    public static double getVolume(String id){
+
+        Customer c = getCustomerById(id);
+
+        double volume = 0;
+        for(WaterBox i:c.getRegisteredDevices().values()){
+            volume += i.getVolume();
+        }
+        return volume;
     }
 
 }

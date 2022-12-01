@@ -63,4 +63,10 @@ public class CustomerController {
         }
         return id;
     }
+    @PostMapping(value="/customerinfo/volume")
+    public String getInfo(@RequestBody String id){
+        double volume = CustomerService.getVolume(id);
+        String response = "{\"volume\": "+volume+"}";
+        return response;
+    }
 }
