@@ -52,7 +52,7 @@ public class WaterBoxService {
         }
         return true;
     }
-    public WaterBox getWaterBox(String id){
+    public static WaterBox getWaterBox(String id){
         try
         {
        return WaterBoxMapper.documentToWaterBox(WaterBoxDao.getWaterBox(new ObjectId(id)));
@@ -91,8 +91,13 @@ public class WaterBoxService {
             return;
         }
     }
-    public static void insertWaterBox(WaterBox waterBox){
-
+    public static double getVolume(String id){
+        WaterBox wb = getWaterBox(id);
+        double volume = 0;
+        for(Measurement m:wb.getMeasurements()){
+            volume += m.getVolume();
+        }
+        return volume;
     }
 
 

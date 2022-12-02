@@ -127,4 +127,18 @@ public class WaterBoxController {
         );
         return CustomerService.getLastWaterBox(data.get("email").toString()).getId().toHexString();
     }
+    @PostMapping(value = "/volume")
+    public double getVolume(@RequestBody String payload){
+        Map<String, Object> data = null;
+        try
+        {
+            data = new ObjectMapper().readValue(payload, Map.class);
+        }
+        catch (Exception e)
+        {
+            System.err.println(e.getMessage());
+            return 0;
+        }
+        return WaterBoxService.getVolume(data.get("id").toString());
+    }
 }
