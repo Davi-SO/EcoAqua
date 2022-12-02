@@ -9,6 +9,8 @@ import com.example.EcoAqua.models.WaterBox;
 import org.bson.types.ObjectId;
 
 import org.bson.Document;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class CustomerService {
@@ -82,5 +84,11 @@ public class CustomerService {
         }
         return volume;
     }
+    public static ArrayList<String> getWaterBoxes(String id){
+        ArrayList<String> ids = new ArrayList<>();
+        for (WaterBox b:getCustomerById(id).getRegisteredDevices().values())
+            ids.add(b.getId().toHexString());
+        return ids;
+    };
 
 }

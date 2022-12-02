@@ -63,10 +63,18 @@ public class CustomerController {
         }
         return id;
     }
+
     @PostMapping(value="/customerinfo/volume")
-    public String getInfo(@RequestBody String id){
+    public String getVolume(@RequestBody String id){
         double volume = CustomerService.getVolume(id);
         String response = "{\"volume\": "+volume+"}";
         return response;
+    }
+    @PostMapping(value="/customerinfo/devices")
+    public String getWaterBoxes(@RequestBody String id){
+        String response = "{\"devices\":[";
+        for(String deviceId: CustomerService.getWaterBoxes(id))
+           response += deviceId + ",";
+        return response + "]}";
     }
 }
