@@ -72,9 +72,9 @@ public class CustomerController {
     }
     @PostMapping(value="/customerinfo/devices")
     public String getWaterBoxes(@RequestBody String id){
-        String response = "{\"devices\":[";
+        String response = "";
         for(String deviceId: CustomerService.getWaterBoxes(id))
            response += deviceId + ",";
-        return response + "]}";
+        return response;
     }
 }
