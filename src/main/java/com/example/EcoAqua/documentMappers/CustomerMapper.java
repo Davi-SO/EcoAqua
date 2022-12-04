@@ -3,6 +3,8 @@ package com.example.EcoAqua.documentMappers;
 import com.example.EcoAqua.Daos.WaterBoxDao;
 import com.example.EcoAqua.models.Customer;
 import com.example.EcoAqua.models.WaterBox;
+
+import com.example.EcoAqua.services.WaterBoxService;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
