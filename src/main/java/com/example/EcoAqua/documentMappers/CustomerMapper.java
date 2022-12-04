@@ -29,7 +29,7 @@ public class CustomerMapper {
     public static Customer documentToCustomer(Document document){
         HashMap<String, WaterBox> waterboxes = new HashMap<>();
         for(Object d:document.get("registeredDevices",ArrayList.class)){
-            waterboxes.put(d.toString(),WaterBoxMapper.documentToWaterBox(WaterBoxService.getWaterBox(d.toString())));
+            waterboxes.put(d.toString(),WaterBoxService.getWaterBox(d.toString()));
         }
         return new Customer(
                 document.getObjectId("_id"),
