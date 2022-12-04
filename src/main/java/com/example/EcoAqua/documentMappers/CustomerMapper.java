@@ -31,6 +31,7 @@ public class CustomerMapper {
         
         for(Object d:document.get("registeredDevices",ArrayList.class)){
             System.out.println(d);
+            if(d!=null)
             waterboxes.put(d.toString(),WaterBoxService.getWaterBox(d.toString()));
         }
         return new Customer(
