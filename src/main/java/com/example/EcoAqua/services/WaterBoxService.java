@@ -60,7 +60,7 @@ public class WaterBoxService {
             oid = new ObjectId(id);
         }
         catch (Exception e){
-            System.err.println("Bad request - setStatusClosed()");
+            System.err.println("Bad request - setStatusOpened()");
             System.err.println(e.getMessage());
         }
         try
@@ -117,6 +117,6 @@ public class WaterBoxService {
         for(Measurement m:wb.getMeasurements()){
             volume += m.getVolume();
         }
-        return volume;
+        return Math.round(volume);
     }
 }
