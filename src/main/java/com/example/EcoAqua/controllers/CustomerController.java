@@ -76,7 +76,7 @@ public class CustomerController {
         byte i=0;
         for(String deviceId: CustomerService.getWaterBoxes(id))
            i++;
-           response += deviceId + (i==CustomerService.getWaterBoxes(id).size?"":",");
+           response += deviceId + (i==CustomerService.getWaterBoxes(id).size()?"":",");
         return response;
     }
 }
