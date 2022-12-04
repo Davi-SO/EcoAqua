@@ -40,13 +40,13 @@ public class CustomerDao {
 
     public void signUp(String name,String email,String password) throws Exception{
         if (getCustomer(email)==null){
-        customers.insertOne(new Document(
-                "email",email).append(
-                "password",password).append(
-                "name",name).append(
-                "registeredDevices",new ArrayList<>()
-                )
-        );
+            customers.insertOne(new Document(
+                            "email",email).append(
+                            "password",password).append(
+                            "name",name).append(
+                            "registeredDevices",new ArrayList<>()
+                    )
+            );
         }
         else {throw new Exception("Conta com email ja cadastrado");}
     }
@@ -63,16 +63,16 @@ public class CustomerDao {
     public static String getLastWaterBox(String email){
         ArrayList<ObjectId> waterBoxes = null;
         try{
-        waterBoxes = customers.find(eq("email",email)).first().get("registeredDevices",ArrayList.class);
-        System.out.println(waterBoxes.get(waterBoxes.size()-1));}
+            waterBoxes = customers.find(eq("email",email)).first().get("registeredDevices",ArrayList.class);
+            System.out.println(waterBoxes.get(waterBoxes.size()-1));}
         catch (Exception e){
             System.err.println(e.getMessage());
         }
         try{
             assert waterBoxes != null;
-            return waterBoxes.get(waterBoxes.size()-1).toString();}
+                return waterBoxes.get(waterBoxes.size()-1).toString();}
         catch (Exception e){
-            System.err.println(e.getMessage());
+            System.err.println("0 Water Boxes found for this Email");
         }
         return "fail!";
     }

@@ -24,13 +24,13 @@ public class WaterBoxMapper {
     public static WaterBox documentToWaterBox(Document document){
         ArrayList<Measurement> measurements = new ArrayList<>();
         if (document.get("measurements",ArrayList.class)!=null){
-        for(Object d:document.get("measurements",ArrayList.class)){
-            try{
-            measurements.add(MeasurementMapper.documentToMeasurement((Document)d));
-            }catch (Exception e){
-                System.err.println(e.getMessage());
+            for(Object d:document.get("measurements",ArrayList.class)){
+                try{
+                    measurements.add(MeasurementMapper.documentToMeasurement((Document)d));
+                }catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
             }
-        }
         }
         return new WaterBox(
                 document.getObjectId("_id"),
