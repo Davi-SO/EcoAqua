@@ -1,6 +1,7 @@
 package com.example.EcoAqua.controllers;
 
 import com.example.EcoAqua.Daos.CustomerDao;
+import com.example.EcoAqua.services.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,11 +45,38 @@ public class CustomerController {
         CustomerDao customerDao = new CustomerDao();
         Map<String, Object> data = null;
         String id = null;
-        try{
-            data = new ObjectMapper().readValue(payload, HashMap.class);}
-        catch (Exception e ){
+        try
+        {
+            data = new ObjectMapper().readValue(payload, HashMap.class);
+        }
+        catch (Exception e )
+        {
             System.err.println(e.getMessage());
         }
+        try
+        {
+            id = CustomerService.signIn(data.get("email").toString(),data.get("password").toString()).toHexString();
+        }
+        catch (Exception e)
+        {
+            return e.getMessage();
+        }
         return id;
+    }
+
+    @PostMapping(value="/customerinfo/volume")
+    public String getVolume(@RequestBody String id){
+        double volume = CustomerService.getVolume(id);
+        String response = "{\"volume\": "+volume+"}";
+        return response;
+    }
+    @PostMapping(value="/customerinfo/devices")
+    public String getWaterBoxes(@RequestBody String id){
+        String response = "";
+        byte i=0;
+        for(String deviceId: CustomerService.getWaterBoxes(id)){
+           i++;
+           response += deviceId + (i==CustomerService.getWaterBoxes(id).size()?"":",");}
+        return response;
     }
 }

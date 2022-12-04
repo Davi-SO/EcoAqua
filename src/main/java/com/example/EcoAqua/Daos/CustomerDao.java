@@ -51,16 +51,7 @@ public class CustomerDao {
         else {throw new Exception("Conta com email ja cadastrado");}
     }
 
-    public ObjectId signIn(String email,String password) throws Exception{
-        try{
-            return customers.find(new Document(
-                    "email",email).append(
-                    "password",password)
-            ).first().getObjectId("_id");}
-        catch (Exception e){
-            throw new Exception("Informações erradas!");
-        }
-    }
+
     public static void attachWaterBox(ObjectId customerId, ObjectId waterBoxId){
         Document customer = getCustomer(customerId);
         Bson updates = Updates.combine(

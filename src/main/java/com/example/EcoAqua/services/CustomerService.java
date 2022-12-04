@@ -8,44 +8,52 @@ import com.example.EcoAqua.models.Customer;
 import com.example.EcoAqua.models.WaterBox;
 import org.bson.types.ObjectId;
 
-import java.util.regex.Pattern;
+import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class CustomerService {
     public static Customer getCustomerById(String id){
         try
         {
-            return CustomerMapper.documentToCustomer(CustomerDao.getCustomer(new ObjectId(id)));
+        return CustomerMapper.documentToCustomer(CustomerDao.getCustomer(new ObjectId(id)));
         }
         catch (IllegalArgumentException e1)
         {
-            System.err.println("Bad request - Invalid ObjectId for Customer");
-            return null;
+        System.err.println("Bad request - getCustomer()");
+        return null;
         }
         catch (Exception e)
         {
-            System.err.println("No customers found with this id!");
-            return null;
+        System.err.println("No customers found with the passed id - getCustomer()");
+        return null;
         }
     }
-    public static Customer getCustomerByEmail(String email){
-        if(!isValid(email)){
-            System.err.println("Invalid email");
-            return null;
+    public static ObjectId signIn(String email,String password) throws Exception{
+        Customer c = null;
+        try{
+            c = CustomerMapper.documentToCustomer(CustomerDao.getCustomer(email));
         }
-
+        catch (Exception e){
+            throw new Exception("Email Inválido");
+        }
+        if (Objects.equals(c.getPassword(), password)) return c.getId();
+        throw new Exception("Senha Inválida");
+    }
+    public static Customer getCustomerByEmail(String email){
         try
         {
             return CustomerMapper.documentToCustomer(CustomerDao.getCustomer(email));
         }
         catch (IllegalArgumentException e1)
         {
-            System.err.println("Bad request - Invalid Parameter");
+            System.err.println("Bad request - getCustomer()");
             return null;
         }
         catch (Exception e)
         {
-            System.err.println("No customers found with this email!");
-
+            System.err.println("No customers found with the passed email - getCustomer()");
             return null;
         }
     }
@@ -55,32 +63,32 @@ public class CustomerService {
     }
 
     public static WaterBox getLastWaterBox(String email) {
-        if(!isValid(email)){
-            System.err.println("Email invalido");
-            return null;
-        }
-
         try
         {
-            ObjectId id = new ObjectId(CustomerDao.getLastWaterBox(email));
-            return WaterBoxMapper.documentToWaterBox(WaterBoxDao.getWaterBox(id));
+        ObjectId id = new ObjectId(CustomerDao.getLastWaterBox(email));
+        return WaterBoxMapper.documentToWaterBox(WaterBoxDao.getWaterBox(id));
         }
         catch (NullPointerException e1)
         {
-            System.err.println("No customers found with this email for the WaterBox");
-            return null;
+        System.err.println("No customers found with the passed email - getLastWaterBox()");
+        return null;
         }
     }
+    public static double getVolume(String id){
 
-    private static boolean isValid(String email){
-        String mailRegex =  "^[A-z0-9_+&*-]+(?:\\.[A-z0-9_+&*-]+)*@(?:[A-z0-9-]+\\.)+[A-z]{2,7}$";
+        Customer c = getCustomerById(id);
 
-        Pattern pattern = Pattern.compile(mailRegex);
-
-        if(email == null)
-            return false;
-
-        return pattern.matcher(email).matches();
+        double volume = 0;
+        for(WaterBox i:c.getRegisteredDevices().values()){
+            volume += i.getVolume();
+        }
+        return volume;
     }
+    public static ArrayList<String> getWaterBoxes(String id){
+        ArrayList<String> ids = new ArrayList<>();
+        for (WaterBox b:getCustomerById(id).getRegisteredDevices().values())
+            ids.add(b.getId().toHexString());
+        return ids;
+    };
 
 }

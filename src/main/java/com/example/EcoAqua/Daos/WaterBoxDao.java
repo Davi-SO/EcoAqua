@@ -2,6 +2,7 @@ package com.example.EcoAqua.Daos;
 
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Updates;
 import org.bson.*;
@@ -42,51 +43,51 @@ public class WaterBoxDao{
     public static ObjectId insertWaterBox(Document waterBox) {
         try
         {
-            return waterBoxes.insertOne(waterBox).getInsertedId().asObjectId().getValue();
+        return waterBoxes.insertOne(waterBox).getInsertedId().asObjectId().getValue();
         }
         catch (NullPointerException e)
         {
-            System.err.println(e.getMessage());
-            System.err.println("WaterBox insertion failed - insertWaterBox()");
-            return null;
+        System.err.println(e.getMessage());
+        System.err.println("WaterBox insertion failed - insertWaterBox()");
+        return null;
         }
     }
     public static void insertMeasurement(Document measurement,ObjectId waterBoxId)throws Exception{
         Document x = null;
         try
         {
-            x = waterBoxes.findOneAndUpdate(
-                    new Document("_id", waterBoxId),//filter
-                    push("measurements", measurement).toBsonDocument());//update
+        x = waterBoxes.findOneAndUpdate(
+                new Document("_id", waterBoxId),//filter
+                push("measurements", measurement).toBsonDocument());//update
 
-            System.out.println(x);
+        System.out.println(x);
         }
         catch(MongoException ex)
         {
-            System.err.println("Error code: "+ex.getCode());
-            System.err.println("Error message: "+ex.getMessage());
-            System.err.println("Measurement insertion failed! - insertMeasurement()");}
+        System.err.println("Error code: "+ex.getCode());
+        System.err.println("Error message: "+ex.getMessage());
+        System.err.println("Measurement insertion failed! - insertMeasurement()");}
         catch (Exception e)
         {
-            System.err.println("Error message: "+ e.getMessage());
+        System.err.println("Error message: "+ e.getMessage());
         }
         if (x==null) throw new Exception("find failed!");
     }
 
     public static int getStatus(ObjectId id){
         try{
-            return waterBoxes.find(new Document("_id",id)).first().getInteger("status");
+        return waterBoxes.find(new Document("_id",id)).first().getInteger("status");
         }
         catch (NullPointerException nullPointerException)
         {
-            System.err.println("Bad Request - Wrong ID for devices, correct it and check status again");
-            return 1;
+        System.err.println("Id incorreto resgistrado no dispositivo - getStatus()");
+        return 1;
         }
         catch (Exception e)
         {
-            System.err.println(e.getMessage());
-            System.err.println(e.getCause().toString());
-            return 1;
+        System.err.println(e.getMessage());
+        System.err.println(e.getCause().toString());
+        return 1;
         }
     }
     public static void setStatusClosed(ObjectId id) throws Exception{
@@ -101,16 +102,5 @@ public class WaterBoxDao{
         }
     }
 
-    public static void setStatusOpened(ObjectId id) throws Exception{
-        if(!validateWaterBoxId(id)) throw new Exception("id not found!");
-        try
-        {
-            waterBoxes.findOneAndUpdate(new Document("_id", id), Updates.set("status",0).toBsonDocument());
-        }
-        catch (Exception e){
-            System.err.println("Status couldnt be changed - setStatusClosed");
-            System.err.println(e.getMessage());
-        }
-    }
 
 }

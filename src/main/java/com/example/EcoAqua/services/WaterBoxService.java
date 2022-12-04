@@ -12,11 +12,11 @@ public class WaterBoxService {
     public static boolean checkInfo(String id){
         try
         {
-            return WaterBoxDao.validateWaterBoxId(new ObjectId(id));
+        return WaterBoxDao.validateWaterBoxId(new ObjectId(id));
         }
         catch (Exception e){
             if (e.getClass()==IllegalArgumentException.class){
-                System.err.println("The WaterBox device sent a problematic request - Check the given ID");
+            System.err.println("The WaterBox device sent a problematic request - checkInfo()");
             }
             return false;
         }
@@ -24,13 +24,13 @@ public class WaterBoxService {
     public static String getStatus(String id) {
         try
         {
-            return String.valueOf(WaterBoxDao.getStatus(new ObjectId(id)));
+        return String.valueOf(WaterBoxDao.getStatus(new ObjectId(id)));
         }
         catch (Exception e)
         {
-            System.err.println(e.getMessage());
-            System.err.println("Bad Request - Not able to get status of water box, check given ID");
-            return String.valueOf(1);
+        System.err.println(e.getMessage());
+        System.err.println("The WaterBox device sent a problematic request - checkStatus()");
+        return String.valueOf(1);
         }
     }
     public static boolean setStatusClosed(String id){
@@ -52,45 +52,21 @@ public class WaterBoxService {
         }
         return true;
     }
-
-    public static boolean setStatusOpened(String id){
-        ObjectId oid = null;
-        try
-        {
-            oid = new ObjectId(id);
-        }
-        catch (Exception e){
-            System.err.println("Bad request - setStatusOpened()");
-            System.err.println(e.getMessage());
-        }
-        try
-        {
-            WaterBoxDao.setStatusOpened(oid);
-        }
-        catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-
-    //FIXME: Changed to Static method.
-    // - Does it changes anything?
-    // - How does it affect others parts of the code?
     public static WaterBox getWaterBox(String id){
         try
         {
-            return WaterBoxMapper.documentToWaterBox(WaterBoxDao.getWaterBox(new ObjectId(id)));
+       return WaterBoxMapper.documentToWaterBox(WaterBoxDao.getWaterBox(new ObjectId(id)));
         }
 
         catch (IllegalArgumentException e1)
         {
-            System.err.println("Bad Request for getWaterBox");
-            return null;
+        System.err.println("The WaterBox device sent a problematic request - getWaterBox()");
+        return null;
         }
         catch(Exception e2)
         {
-            System.err.println("No WaterBoxes found with this ID");
-            return null;
+        System.err.println("No waterBoxes found with the id passed - getWaterBox()");
+        return null;
         }
     }
     public static void insertMeasurement(Measurement m,String id){
@@ -107,15 +83,21 @@ public class WaterBoxService {
         }
         try
         {
-            WaterBoxDao.insertMeasurement(MeasurementMapper.measurementToDocument(m),oid);
+        WaterBoxDao.insertMeasurement(MeasurementMapper.measurementToDocument(m),oid);
         }
         catch (Exception e){
             System.err.println("The id provided found no devices");
             System.err.println(e.getMessage());
+            return;
         }
     }
-    public static void insertWaterBox(WaterBox waterBox){
-
+    public static double getVolume(String id){
+        WaterBox wb = getWaterBox(id);
+        double volume = 0;
+        for(Measurement m:wb.getMeasurements()){
+            volume += m.getVolume();
+        }
+        return volume;
     }
 
 

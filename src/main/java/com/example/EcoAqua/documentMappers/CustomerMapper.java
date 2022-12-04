@@ -3,6 +3,8 @@ package com.example.EcoAqua.documentMappers;
 import com.example.EcoAqua.Daos.WaterBoxDao;
 import com.example.EcoAqua.models.Customer;
 import com.example.EcoAqua.models.WaterBox;
+
+import com.example.EcoAqua.services.WaterBoxService;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -26,9 +28,11 @@ public class CustomerMapper {
     }
     public static Customer documentToCustomer(Document document){
         HashMap<String, WaterBox> waterboxes = new HashMap<>();
-        WaterBoxDao wbdao= new WaterBoxDao();
+        
         for(Object d:document.get("registeredDevices",ArrayList.class)){
-            waterboxes.put(d.toString(),WaterBoxMapper.documentToWaterBox(wbdao.getWaterBox((ObjectId) d)));
+            System.out.println(d);
+            if(d!=null)
+            waterboxes.put(d.toString(),WaterBoxService.getWaterBox(d.toString()));
         }
         return new Customer(
                 document.getObjectId("_id"),
