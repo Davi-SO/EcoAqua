@@ -73,8 +73,10 @@ public class CustomerController {
     @PostMapping(value="/customerinfo/devices")
     public String getWaterBoxes(@RequestBody String id){
         String response = "";
+        byte i=0;
         for(String deviceId: CustomerService.getWaterBoxes(id))
-           response += deviceId + ",";
+           i++;
+           response += deviceId + (i==CustomerService.getWaterBoxes(id).size?"":",");
         return response;
     }
 }
