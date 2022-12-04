@@ -26,9 +26,8 @@ public class CustomerMapper {
     }
     public static Customer documentToCustomer(Document document){
         HashMap<String, WaterBox> waterboxes = new HashMap<>();
-        WaterBoxDao wbdao= new WaterBoxDao();
         for(Object d:document.get("registeredDevices",ArrayList.class)){
-            waterboxes.put(d.toString(),WaterBoxMapper.documentToWaterBox(wbdao.getWaterBox((ObjectId) d)));
+            waterboxes.put(d.toString(),WaterBoxMapper.documentToWaterBox(WaterBoxService.getWaterBox(d.toString())));
         }
         return new Customer(
                 document.getObjectId("_id"),
