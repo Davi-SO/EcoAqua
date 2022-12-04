@@ -28,7 +28,9 @@ public class CustomerMapper {
     }
     public static Customer documentToCustomer(Document document){
         HashMap<String, WaterBox> waterboxes = new HashMap<>();
+        
         for(Object d:document.get("registeredDevices",ArrayList.class)){
+            System.out.println(d);
             waterboxes.put(d.toString(),WaterBoxService.getWaterBox(d.toString()));
         }
         return new Customer(
