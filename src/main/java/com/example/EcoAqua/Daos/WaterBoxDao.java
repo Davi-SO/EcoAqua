@@ -101,4 +101,16 @@ public class WaterBoxDao{
         }
     }
 
+    public static void setStatusOpened(ObjectId id) throws Exception{
+        if(!validateWaterBoxId(id)) throw new Exception("id not found!");
+        try
+        {
+            waterBoxes.findOneAndUpdate(new Document("_id", id), Updates.set("status",0).toBsonDocument());
+        }
+        catch (Exception e){
+            System.err.println("Status couldnt be changed - setStatusClosed");
+            System.err.println(e.getMessage());
+        }
+    }
+
 }

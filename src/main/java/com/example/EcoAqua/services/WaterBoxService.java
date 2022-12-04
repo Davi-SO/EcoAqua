@@ -53,6 +53,26 @@ public class WaterBoxService {
         return true;
     }
 
+    public static boolean setStatusOpened(String id){
+        ObjectId oid = null;
+        try
+        {
+            oid = new ObjectId(id);
+        }
+        catch (Exception e){
+            System.err.println("Bad request - setStatusOpened()");
+            System.err.println(e.getMessage());
+        }
+        try
+        {
+            WaterBoxDao.setStatusOpened(oid);
+        }
+        catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
     //FIXME: Changed to Static method.
     // - Does it changes anything?
     // - How does it affect others parts of the code?

@@ -72,6 +72,7 @@ class WaterBoxServiceTest {
 
     }
 
+    //TODO: Rodar o método e depois fazer uma busca pelo valor inserido/criado
     @Test
     void getWaterBoxSuccess() {
         String idCorrect = "6381371888a2a3328083cc26";
@@ -79,7 +80,7 @@ class WaterBoxServiceTest {
 
     }
 
-    //TODO: Como testar um método void
+    //TODO: Rodar o método e depois fazer uma busca pelo valor inserido/criado
     @Test
     void insertMeasurementFail() {
         Measurement medida = new Measurement(123456789, 10.5, 23.4);
