@@ -59,7 +59,7 @@ public class CustomerController {
         }
         catch (Exception e)
         {
-            return e.getMessage();
+            return "false";
         }
         return id;
     }
